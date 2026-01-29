@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app_title">Salary Calculator Israel 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1 data-i18n="app_title">Salary Calculator Israel 2025</h1>
+            <div class="lang-switcher">
+                <button data-lang="ru" class="active">RU</button>
+                <button data-lang="en">EN</button>
+                <button data-lang="he">HE</button>
+            </div>
+        </header>
+
+        <main>
+            <form id="salary-form">
+                <!-- Financial Data -->
+                <section class="card">
+                    <h2 data-i18n="financial_data">Financial Data</h2>
+                    <div class="form-group">
+                        <label for="baseSalary" data-i18n="base_salary">Base Salary (Brutto)</label>
+                        <input type="number" id="baseSalary" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="bonuses" data-i18n="bonuses">Bonuses / Commissions</label>
+                        <input type="number" id="bonuses" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="carValue" data-i18n="car_value">Car Value (Shovi Rechev)</label>
+                        <input type="number" id="carValue" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="foodValue" data-i18n="food_value">Phone / Food Value</label>
+                        <input type="number" id="foodValue" min="0" value="0">
+                    </div>
+                </section>
+
+                <!-- Personal Data -->
+                <section class="card">
+                    <h2 data-i18n="personal_data">Personal Data</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender" data-i18n="gender">Gender</label>
+                            <select id="gender">
+                                <option value="male" data-i18n="male">Male</option>
+                                <option value="female" data-i18n="female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="residentStatus" data-i18n="resident_status">Status</label>
+                            <select id="residentStatus">
+                                <option value="resident" data-i18n="resident">Resident</option>
+                                <option value="oleh_hadash" data-i18n="oleh_hadash">Oleh Hadash</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group hidden" id="aliyahDateGroup">
+                        <label for="aliyahDate" data-i18n="aliyah_date">Date of Aliyah</label>
+                        <input type="date" id="aliyahDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="children">Children</label>
+                        <div class="children-inputs">
+                            <div class="child-input">
+                                <span data-i18n="age_0_5">0-5 y.o.</span>
+                                <input type="number" id="children0_5" min="0" value="0">
+                            </div>
+                            <div class="child-input">
+                                <span data-i18n="age_6_17">6-17 y.o.</span>
+                                <input type="number" id="children6_17" min="0" value="0">
+                            </div>
+                            <div class="child-input">
+                                <span data-i18n="age_18">18 y.o.</span>
+                                <input type="number" id="children18" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="armyService" data-i18n="army_service">Army Service</label>
+                        <select id="armyService">
+                            <option value="none" data-i18n="none">None</option>
+                            <option value="lt_24" data-i18n="less_24">< 24 months</option>
+                            <option value="gt_24" data-i18n="more_24">> 24 months</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group hidden" id="armyDischargeGroup">
+                         <label class="checkbox-label">
+                            <input type="checkbox" id="armyRecent">
+                            <span data-i18n="army_recent">Finished within last 36 months?</span>
+                         </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="education" data-i18n="education">Education</label>
+                        <select id="education">
+                            <option value="none" data-i18n="none_education">None</option>
+                            <option value="bachelor" data-i18n="bachelor">Bachelor</option>
+                            <option value="master" data-i18n="master">Master</option>
+                        </select>
+                    </div>
+                </section>
+            </form>
+
+            <section class="results card">
+                <h2 data-i18n="results">Results</h2>
+
+                <div class="result-box net-salary-box">
+                    <span data-i18n="net_salary">Net Salary</span>
+                    <span class="value" id="netSalaryVal">0 ₪</span>
+                </div>
+
+                <div class="breakdown">
+                    <div class="breakdown-item">
+                        <span data-i18n="taxable_income">Taxable Income</span>
+                        <span class="value" id="taxableIncomeVal">0 ₪</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span data-i18n="income_tax">Income Tax</span>
+                        <span class="value" id="incomeTaxVal">0 ₪</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span data-i18n="credit_points_value">Credit Points Value</span>
+                        <div class="flex-col">
+                            <span class="value highlight-green" id="creditPointsVal">0 ₪</span>
+                            <span class="sub-value" id="creditPointsCount">(0 points)</span>
+                        </div>
+                    </div>
+                    <div class="breakdown-item">
+                        <span data-i18n="bituah_leumi">Bituah Leumi</span>
+                        <span class="value" id="bituahLeumiVal">0 ₪</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span data-i18n="health_tax">Health Tax</span>
+                        <span class="value" id="healthTaxVal">0 ₪</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span data-i18n="pension">Pension</span>
+                        <span class="value" id="pensionVal">0 ₪</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span data-i18n="study_fund">Study Fund</span>
+                        <span class="value" id="studyFundVal">0 ₪</span>
+                    </div>
+                    <div class="breakdown-item total-deductions">
+                        <span data-i18n="total_deductions">Total Deductions</span>
+                        <span class="value" id="totalDeductionsVal">0 ₪</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
