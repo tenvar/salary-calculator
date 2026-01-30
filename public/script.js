@@ -165,7 +165,9 @@ const en = {
         studyFund: "Keren Hishtalmut",
         totalDeductions: "Total Deductions",
         netSalary: "Net Salary",
+        employerCostSection: "Employer cost (with all fees)",
         employerCost: "Total Employer Cost (Est.)",
+        grossToEmployee: "Gross to employee (salary + benefits)",
         imputedStudyFund: "Imputed Income (Study Fund)",
         employerPension: "Pension (Employer)",
         employerSeverance: "Severance (Pitzuim)",
@@ -265,7 +267,9 @@ const he = {
         studyFund: "קרן השתלמות (עובד)",
         totalDeductions: "סך הכל ניכויים",
         netSalary: "שכר נטו",
+        employerCostSection: "עלות מעביד (כולל כל האגרות)",
         employerCost: "עלות מעביד (משוער)",
+        grossToEmployee: "ברוטו לעובד (שכר + הטבות)",
         imputedStudyFund: "זקיפת שווי קה\"ש מעסיק",
         employerPension: "פנסיה (מעסיק)",
         employerSeverance: "פיצויים",
@@ -364,7 +368,9 @@ const ru = {
         studyFund: "Керен Иштальмут (Работник)",
         totalDeductions: "Всего удержаний",
         netSalary: "Нетто (На руки)",
+        employerCostSection: "Сколько заплатит работодатель (со всеми сборами)",
         employerCost: "Стоимость работодателя (Прим.)",
+        grossToEmployee: "Выплаты работнику (брутто + льготы)",
         imputedStudyFund: "Вмененный доход (Керен Иштальмут)",
         employerPension: "Пенсия (Работодатель)",
         employerSeverance: "Компенсация (Пицуим)",
@@ -518,6 +524,28 @@ function calculateSalary(input, rates) {
     const totalCashGross = baseSalary + shonot + bonus;
     const netSalary = Math.round((totalCashGross - totalDeductions) * 100) / 100;
 
+    // Employer costs (what the employer pays on top of gross: Bituah Leumi, pension, severance, study fund)
+    let employerBituahLeumi = 0;
+    if (taxableIncome <= blThreshold) {
+        employerBituahLeumi = taxableIncome * rates.bituahLeumi.employer.reducedRate;
+    } else {
+        employerBituahLeumi = blThreshold * rates.bituahLeumi.employer.reducedRate +
+            (taxableIncome - blThreshold) * rates.bituahLeumi.employer.fullRate;
+    }
+    let employerPension = 0, employerSeverance = 0;
+    if (isPensionEnabled) {
+        const pensionCap = Math.min(pensionBase, rates.pension.eligibleSalaryCap);
+        employerPension = pensionCap * rates.pension.employerRate;
+        employerSeverance = pensionCap * rates.pension.severanceRate;
+    }
+    let employerStudyFund = 0;
+    if (isStudyFundEnabled) {
+        const studyFundBase = Math.min(pensionBase, rates.studyFund.ceiling);
+        employerStudyFund = studyFundBase * rates.studyFund.employerRate;
+    }
+    const grossPaidToEmployee = totalCashGross + (otherBenefitValue || 0) + (carValue || 0);
+    const totalEmployerCost = Math.round((grossPaidToEmployee + employerBituahLeumi + employerPension + employerSeverance + employerStudyFund) * 100) / 100;
+
     return {
         taxableIncome,
         grossTax,
@@ -534,7 +562,13 @@ function calculateSalary(input, rates) {
         totalDeductions,
         netSalary,
         totalCashGross,
-        pensionBase
+        pensionBase,
+        grossPaidToEmployee,
+        employerBituahLeumi,
+        employerPension,
+        employerSeverance,
+        employerStudyFund,
+        totalEmployerCost
     };
 }
 
@@ -745,6 +779,9 @@ function setLanguage(lang) {
     updateLabel('label-studyFundEnabled', t.labels.studyFundEnabled);
     updateLabel('label-studyFundRate', t.labels.studyFundRate);
     updateLabel('label-netSalary', t.results.netSalary);
+    const employerSectionEl = document.getElementById('section-employer-cost');
+    if (employerSectionEl) employerSectionEl.textContent = t.results.employerCostSection;
+    updateLabel('label-employerCost', t.results.employerCost);
 
     const footerEl = document.getElementById('footer-disclaimer');
     if (footerEl) footerEl.textContent = t.footerDisclaimer;
@@ -821,10 +858,35 @@ function renderResults(res) {
     });
 
     document.getElementById('value-netSalary').textContent = formatCurrency(res.netSalary);
+
+    // Employer cost block
+    const empContainer = document.getElementById('employer-cost-container');
+    if (empContainer) {
+        empContainer.innerHTML = '';
+        const empRows = [
+            { label: t.grossToEmployee, value: res.grossPaidToEmployee },
+            { label: t.employerBituahLeumi, value: res.employerBituahLeumi },
+            { label: t.employerPension, value: res.employerPension },
+            { label: t.employerSeverance, value: res.employerSeverance },
+            { label: t.employerStudyFund, value: res.employerStudyFund }
+        ];
+        empRows.forEach(r => {
+            const div = document.createElement('div');
+            div.className = 'result-row';
+            div.innerHTML = `
+                <span>${r.label}</span>
+                <span>${formatCurrency(r.value)}</span>
+            `;
+            empContainer.appendChild(div);
+        });
+    }
+    const valueEmployerEl = document.getElementById('value-employerCost');
+    if (valueEmployerEl) valueEmployerEl.textContent = formatCurrency(res.totalEmployerCost);
 }
 
 function formatCurrency(num) {
-    return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(num);
+    const n = (num === 0 || num === -0) ? 0 : num;
+    return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 }).format(n);
 }
 
 // INIT
