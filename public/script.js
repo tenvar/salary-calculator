@@ -2,7 +2,7 @@
 
 // 1. RATES (Replaced rates.json)
 const rates = {
-    "creditPointValue": 242,
+    "creditPointValue": 253,
     "taxBrackets": [
         { "rate": 0.10, "max": 7010, "accumulatedMax": 701 },
         { "rate": 0.14, "max": 10060, "accumulatedMax": 1128 },
@@ -22,7 +22,7 @@ const rates = {
         "employerRate": 0.065,
         "severanceRate": 0.0833,
         "taxCreditRate": 0.35,
-        "eligibleSalaryCap": 9714
+        "eligibleSalaryCap": 9700
     },
     "studyFund": {
         "defaultRate": 0.025,
@@ -513,10 +513,10 @@ function calculateSalary(input, rates) {
     }
     const totalBituahLeumi = socialSecurity + healthTax;
 
-    // Net Salary
+    // Net Salary (gross cash minus all deductions; non-cash benefits like meals/car are in taxable income only)
     const totalDeductions = finalIncomeTax + totalBituahLeumi + pensionDed + studyFundDed;
     const totalCashGross = baseSalary + shonot + bonus;
-    const netSalary = totalCashGross - totalDeductions;
+    const netSalary = Math.round((totalCashGross - totalDeductions) * 100) / 100;
 
     return {
         taxableIncome,
@@ -802,7 +802,8 @@ function renderResults(res) {
         { label: t.grossTax, value: res.grossTax },
         { label: t.pensionBenefit, value: res.pensionTaxBenefit, isDeduction: false, color: 'var(--color-accent)' },
         { label: t.finalTax, value: -res.finalIncomeTax, color: '#f87171' },
-        { label: t.bituahLeumi, value: -res.totalBituahLeumi, color: '#f87171' },
+        { label: t.bituahLeumi, value: -res.socialSecurity, color: '#f87171' },
+        { label: t.healthTax, value: -res.healthTax, color: '#f87171' },
         { label: t.pension, value: -res.pensionDed, color: '#f87171' },
         { label: t.studyFund, value: -res.studyFundDed, color: '#f87171' },
     ];
