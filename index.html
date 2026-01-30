@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Israel Salary Calculator 2025</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="lang-selector">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="he">HE</button>
+    <button class="lang-btn" data-lang="ru">RU</button>
+  </div>
+
+  <h1 id="title">Israel Salary Calculator</h1>
+  <p id="subtitle" class="subtitle">Estimate your net salary for 2025</p>
+
+  <div class="container">
+    <!-- Input Column -->
+    <div class="card input-section">
+      <h2 id="section-financial">Financial Data</h2>
+
+      <!-- Base Salary -->
+      <div class="input-group">
+        <label for="baseSalary" id="label-baseSalary">Base Salary</label>
+        <input type="number" id="baseSalary" value="23000">
+      </div>
+
+      <!-- Food -->
+      <div class="box">
+        <div class="header-row">
+          <label style="font-weight: bold;" id="label-otherBenefits">Meals Value</label>
+          <div>
+            <input type="checkbox" id="calcFoodByDays">
+            <span id="label-calcByDays-food">Calc by Days</span>
+          </div>
+        </div>
+        <div id="food-fixed-container">
+          <div class="input-group">
+            <input type="number" id="foodFixed" placeholder="Monthly Total">
+          </div>
+        </div>
+        <div id="food-daily-container" class="grid-2" style="display:none;">
+          <div class="input-group">
+            <label id="label-dailyRate-food">Daily</label>
+            <input type="number" id="foodDaily" value="0">
+          </div>
+          <div class="input-group">
+            <label style="opacity:0">.</label>
+            <div id="foodTotal" style="padding: 0.75rem; color: gray;">= 0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Travel -->
+      <div class="box">
+        <div class="header-row">
+          <label style="font-weight: bold;" id="label-travel">Travel</label>
+          <div class="checkbox-group">
+            <input type="checkbox" id="calcTravelByDays">
+            <span id="label-calcByDays-travel">Calc by Days</span>
+          </div>
+        </div>
+        <div id="travel-fixed-container">
+          <div class="input-group">
+            <input type="number" id="travelFixed" placeholder="Monthly Total">
+          </div>
+        </div>
+        <div id="travel-daily-container" class="grid-2" style="display:none;">
+          <div class="input-group">
+            <label id="label-dailyRate-travel">Daily</label>
+            <input type="number" id="travelDaily" value="0">
+          </div>
+          <div class="input-group">
+            <label style="opacity:0">.</label>
+            <div id="travelTotal" style="padding: 0.75rem; color: gray;">= 0</div>
+          </div>
+        </div>
+
+        <!-- Work Days (Shared) -->
+        <div id="workDays-container" class="input-group" style="margin-top: 1rem; display:none;">
+          <label id="label-workDays">Work Days</label>
+          <input type="number" id="workDays" value="22">
+        </div>
+      </div>
+
+      <!-- Bonuses -->
+      <div class="input-group">
+        <label for="bonuses" id="label-bonuses">Bonuses</label>
+        <input type="number" id="bonuses" value="0">
+      </div>
+
+      <!-- Car -->
+      <div class="input-group">
+        <label for="carValue" id="label-carValue">Car Value</label>
+        <input type="number" id="carValue" value="0">
+      </div>
+
+      <!-- Personal Section -->
+      <h2 id="section-personal" style="margin-top: 2rem; color: var(--color-secondary);">Personal Details</h2>
+
+      <div class="grid-2">
+        <div class="input-group">
+          <label id="label-gender">Gender</label>
+          <select id="gender">
+            <option value="male" id="opt-male">Male</option>
+            <option value="female" id="opt-female">Female</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label id="label-maritalStatus">Marital Status</label>
+          <select id="maritalStatus">
+            <option value="single" id="opt-single">Single</option>
+            <option value="married" id="opt-married">Married</option>
+            <option value="divorced" id="opt-divorced">Divorced</option>
+            <option value="widower" id="opt-widower">Widower</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 1rem;">
+        <!-- Spouse Works (Conditional) -->
+        <div class="checkbox-group" id="spouseWorks-container" style="display:none;">
+          <input type="checkbox" id="spouseWorks">
+          <label for="spouseWorks" id="label-spouseWorks">Spouse Works?</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="isAlimony">
+          <label for="isAlimony" id="label-isAlimony">Paying Alimony?</label>
+        </div>
+      </div>
+
+      <!-- Children (Collapsible) -->
+      <div class="collapsible" id="col-children">
+        <div class="collapsible-header">
+          <span id="label-childrenHeader">Children</span>
+          <span>▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div class="grid-2">
+            <div class="input-group">
+              <label id="label-children0">Born (0)</label>
+              <input type="number" id="children0" value="0" min="0">
+            </div>
+            <div class="input-group">
+              <label id="label-children1to5">1-5</label>
+              <input type="number" id="children1to5" value="0" min="0">
+            </div>
+            <div class="input-group">
+              <label id="label-children6to17">6-17</label>
+              <input type="number" id="children6to17" value="0" min="0">
+            </div>
+            <div class="input-group">
+              <label id="label-children18">18</label>
+              <input type="number" id="children18" value="0" min="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advanced (Collapsible) -->
+      <div class="collapsible" id="col-advanced">
+        <div class="collapsible-header">
+          <span>Advanced (Aliyah, Degree, Army)</span>
+          <span>▼</span>
+        </div>
+        <div class="collapsible-content">
+          <div class="grid-2">
+            <div class="input-group">
+              <label id="label-resident">Residency</label>
+              <select id="residentStatus">
+                <option value="regular" id="opt-regular">Resident</option>
+                <option value="oleh" id="opt-oleh">Oleh</option>
+              </select>
+            </div>
+            <div class="input-group" id="aliyahMonths-container" style="display:none;">
+              <label id="label-aliyahMonths">Months since Aliyah</label>
+              <input type="number" id="aliyahMonths" value="0">
+            </div>
+          </div>
+          <div class="grid-2" style="margin-top: 1rem;">
+            <div class="input-group">
+              <label id="label-army">Army</label>
+              <select id="armyService">
+                <option value="none" id="opt-none">None</option>
+                <option value="less24" id="opt-less24">Less 24</option>
+                <option value="more24" id="opt-more24">More 24</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label id="label-degree">Degree</label>
+              <select id="degree">
+                <option value="none" id="opt-noDegree">None</option>
+                <option value="bachelor" id="opt-bachelor">Bachelor</option>
+                <option value="master" id="opt-master">Master</option>
+              </select>
+            </div>
+          </div>
+          <!-- Settlement -->
+          <div style="margin-top: 1rem; border-top: 1px solid #4b5563; padding-top: 1rem;">
+            <div class="input-group">
+              <label id="label-settlement">Settlement</label>
+              <select id="settlementId">
+                <option value="">Select...</option>
+              </select>
+            </div>
+            <div id="settlement-info" style="font-size: 0.9rem; color: var(--color-accent); margin-top: 0.5rem;"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 id="section-social" style="margin-top: 2rem; color: var(--color-primary);">Social Deductions</h2>
+      <div class="grid-2">
+        <!-- Pension -->
+        <div class="input-group">
+          <div class="checkbox-group" style="margin-bottom: 0.5rem;">
+            <input type="checkbox" id="pensionEnabled" checked>
+            <label for="pensionEnabled" id="label-pensionEnabled">Pension?</label>
+          </div>
+          <input type="number" id="pensionRate" value="6.0" step="0.1">
+        </div>
+        <!-- Study Fund -->
+        <div class="input-group">
+          <div class="checkbox-group" style="margin-bottom: 0.5rem;">
+            <input type="checkbox" id="studyFundEnabled" checked>
+            <label for="studyFundEnabled" id="label-studyFundEnabled">Study Fund?</label>
+          </div>
+          <input type="number" id="studyFundRate" value="2.5" step="0.1">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Results Column -->
+    <div class="card results-section">
+      <h2 id="section-results">Results</h2>
+
+      <div id="results-container">
+        <!-- Rows will be injected here by JS -->
+      </div>
+
+      <div class="result-row total-netto">
+        <span id="label-netSalary">Net Salary</span>
+        <span id="value-netSalary">0 ₪</span>
+      </div>
+
+      <div style="margin-top: 2rem; font-size: 0.8rem; color: gray;">
+        * Calculations are estimates for 2025 based on current tax laws.
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+{
+  "creditPointValue": 242,
+  "taxBrackets": [
+    {
+      "rate": 0.10,
+      "max": 7010,
+      "accumulatedMax": 701
+    },
+    {
+      "rate": 0.14,
+      "max": 10060,
+      "accumulatedMax": 1128
+    },
+    {
+      "rate": 0.20,
+      "max": 16150,
+      "accumulatedMax": 2346
+    },
+    {
+      "rate": 0.31,
+      "max": 22440,
+      "accumulatedMax": 4296
+    },
+    {
+      "rate": 0.35,
+      "max": 46690,
+      "accumulatedMax": 12783
+    },
+    {
+      "rate": 0.47,
+      "max": null,
+      "accumulatedMax": null
+    }
+  ],
+  "bituahLeumi": {
+    "threshold": 7522,
+    "reducedRate": {
+      "socialSecurity": 0.0040,
+      "healthTax": 0.0310
+    },
+    "fullRate": {
+      "socialSecurity": 0.0700,
+      "healthTax": 0.0500
+    },
+    "employer": {
+      "reducedRate": 0.0355,
+      "fullRate": 0.0760
+    }
+  },
+  "pension": {
+    "defaultRate": 0.06,
+    "employerRate": 0.065,
+    "severanceRate": 0.0833,
+    "taxCreditRate": 0.35,
+    "eligibleSalaryCap": 9714
+  },
+  "studyFund": {
+    "defaultRate": 0.025,
+    "employerRate": 0.075,
+    "ceiling": 15712
+  },
+  "creditPointsRules": {
+    "resident": 2.25,
+    "woman": 0.5,
+    "singleParent": 1.0,
+    "alimony": 1.0,
+    "children": {
+      "bornThisYear": 1.5,
+      "ages1to5": 2.5,
+      "ages6to18": 1.0,
+      "age18": 0.5,
+      "toddlerFather": 2.5
+    },
+    "aliyah": {
+      "1-18": 0.25,
+      "19-30": 0.1666,
+      "31-42": 0.0833
+    },
+    "army": {
+      "men_gt_24": 2.0,
+      "women_or_lt_24": 1.0
+    },
+    "degree": {
+      "bachelor": 1.0,
+      "master": 0.5
+    }
+  },
+  "settlementDiscount": []
+}
