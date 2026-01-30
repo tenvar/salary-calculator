@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Israel Salary Calculator 2025</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="public/style.css">
 </head>
 
 <body>
@@ -26,33 +26,7 @@
       <!-- Base Salary -->
       <div class="input-group">
         <label for="baseSalary" id="label-baseSalary">Base Salary</label>
-        <input type="number" id="baseSalary" value="23000">
-      </div>
-
-      <!-- Food -->
-      <div class="box">
-        <div class="header-row">
-          <label style="font-weight: bold;" id="label-otherBenefits">Meals Value</label>
-          <div>
-            <input type="checkbox" id="calcFoodByDays">
-            <span id="label-calcByDays-food">Calc by Days</span>
-          </div>
-        </div>
-        <div id="food-fixed-container">
-          <div class="input-group">
-            <input type="number" id="foodFixed" placeholder="Monthly Total">
-          </div>
-        </div>
-        <div id="food-daily-container" class="grid-2" style="display:none;">
-          <div class="input-group">
-            <label id="label-dailyRate-food">Daily</label>
-            <input type="number" id="foodDaily" value="0">
-          </div>
-          <div class="input-group">
-            <label style="opacity:0">.</label>
-            <div id="foodTotal" style="padding: 0.75rem; color: gray;">= 0</div>
-          </div>
-        </div>
+        <input type="number" id="baseSalary" placeholder="" inputmode="numeric">
       </div>
 
       <!-- Travel -->
@@ -66,7 +40,7 @@
         </div>
         <div id="travel-fixed-container">
           <div class="input-group">
-            <input type="number" id="travelFixed" placeholder="Monthly Total">
+            <input type="number" id="travelFixed" placeholder="">
           </div>
         </div>
         <div id="travel-daily-container" class="grid-2" style="display:none;">
@@ -84,6 +58,32 @@
         <div id="workDays-container" class="input-group" style="margin-top: 1rem; display:none;">
           <label id="label-workDays">Work Days</label>
           <input type="number" id="workDays" value="22">
+        </div>
+      </div>
+
+      <!-- Food -->
+      <div class="box">
+        <div class="header-row">
+          <label style="font-weight: bold;" id="label-otherBenefits">Meals Value</label>
+          <div>
+            <input type="checkbox" id="calcFoodByDays">
+            <span id="label-calcByDays-food">Calc by Days</span>
+          </div>
+        </div>
+        <div id="food-fixed-container">
+          <div class="input-group">
+            <input type="number" id="foodFixed" placeholder="">
+          </div>
+        </div>
+        <div id="food-daily-container" class="grid-2" style="display:none;">
+          <div class="input-group">
+            <label id="label-dailyRate-food">Daily</label>
+            <input type="number" id="foodDaily" value="0">
+          </div>
+          <div class="input-group">
+            <label style="opacity:0">.</label>
+            <div id="foodTotal" style="padding: 0.75rem; color: gray;">= 0</div>
+          </div>
         </div>
       </div>
 
@@ -164,7 +164,7 @@
       <!-- Advanced (Collapsible) -->
       <div class="collapsible" id="col-advanced">
         <div class="collapsible-header">
-          <span>Advanced (Aliyah, Degree, Army)</span>
+          <span id="label-advancedHeader">Advanced (Aliyah, Degree, Army)</span>
           <span>▼</span>
         </div>
         <div class="collapsible-content">
@@ -253,7 +253,11 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <footer class="site-footer">
+    <p id="footer-disclaimer">This site may contain errors and is not legal or tax advice. Results are estimates and do not reflect your exact net salary.</p>
+  </footer>
+
+  <script src="public/script.js"></script>
 </body>
 
 </html>

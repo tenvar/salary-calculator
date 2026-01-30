@@ -143,6 +143,8 @@ const en = {
         settlementName: "Settlement Name",
         settlementRate: "Discount Rate (%)",
 
+        advancedHeader: "Advanced (Aliyah, Degree, Army)",
+
         // Socials
         pensionEnabled: "Pension Fund?",
         pensionRate: "Pension Rate (%)",
@@ -169,7 +171,8 @@ const en = {
         employerSeverance: "Severance (Pitzuim)",
         employerStudyFund: "Study Fund (Employer)",
         employerBituahLeumi: "Bituah Leumi (Employer)"
-    }
+    },
+    footerDisclaimer: "This site may contain errors and is not legal or tax advice. Results are estimates and do not reflect your exact net salary."
 };
 
 const he = {
@@ -240,6 +243,8 @@ const he = {
         settlementName: "שם הישוב",
         settlementRate: "שיעור ההנחה (%)",
 
+        advancedHeader: "מתקדם (עלייה, תואר, צבא)",
+
         // Socials
         pensionEnabled: "הפרשה לפנסיה?",
         pensionRate: "אחוז הפרשה לפנסיה (%)",
@@ -266,7 +271,8 @@ const he = {
         employerSeverance: "פיצויים",
         employerStudyFund: "קרן השתלמות (מעסיק)",
         employerBituahLeumi: "ביטוח לאומי (מעסיק)"
-    }
+    },
+    footerDisclaimer: "האתר עלול להכיל טעויות ואינו ייעוץ משפטי או מס. התוצאות הן הערכות ואינן משקפות את שכר הנטו המדויק שלך."
 };
 
 const ru = {
@@ -336,6 +342,8 @@ const ru = {
         settlementName: "Название поселения",
         settlementRate: "Скидка (%)",
 
+        advancedHeader: "Дополнительно (Алия, образование, армия)",
+
         // Socials
         pensionEnabled: "Пенсионные отчисления?",
         pensionRate: "Взнос (Работник) %",
@@ -362,7 +370,8 @@ const ru = {
         employerSeverance: "Компенсация (Пицуим)",
         employerStudyFund: "Керен Иштальмут (Работодатель)",
         employerBituahLeumi: "Битуах Леуми (Работодатель)"
-    }
+    },
+    footerDisclaimer: "Сайт может содержать ошибки и не является юридической или налоговой консультацией. Результаты — ориентировочные и не отражают точную зарплату на руки."
 };
 
 const locales = { en, he, ru };
@@ -532,7 +541,7 @@ function calculateSalary(input, rates) {
 // 5. MAIN LOGIC
 const state = {
     lang: 'en',
-    baseSalary: 23000,
+    baseSalary: 0,
     bonuses: 0,
     travelFixed: 0,
     travelDaily: 0,
@@ -571,6 +580,10 @@ const ids = [
 ];
 
 function init() {
+    // Sync baseSalary from DOM (empty on load)
+    const baseEl = document.getElementById('baseSalary');
+    if (baseEl && baseEl.value === '') state.baseSalary = 0;
+
     // Bind Events
     ids.forEach(id => {
         const el = document.getElementById(id);
@@ -675,6 +688,13 @@ function setLanguage(lang) {
     updateLabel('label-workDays', t.labels.workDays);
     updateLabel('label-carValue', t.labels.carValue);
 
+    const travelFixedEl = document.getElementById('travelFixed');
+    const foodFixedEl = document.getElementById('foodFixed');
+    if (travelFixedEl) travelFixedEl.placeholder = t.labels.monthlyTotal;
+    if (foodFixedEl) foodFixedEl.placeholder = t.labels.monthlyTotal;
+
+    updateLabel('label-advancedHeader', t.labels.advancedHeader);
+
     updateLabel('label-gender', t.labels.gender);
     document.getElementById('opt-male').textContent = t.labels.male;
     document.getElementById('opt-female').textContent = t.labels.female;
@@ -723,6 +743,9 @@ function setLanguage(lang) {
     updateLabel('label-pensionEnabled', t.labels.pensionEnabled);
     updateLabel('label-studyFundEnabled', t.labels.studyFundEnabled);
     updateLabel('label-netSalary', t.results.netSalary);
+
+    const footerEl = document.getElementById('footer-disclaimer');
+    if (footerEl) footerEl.textContent = t.footerDisclaimer;
 
     calculateAndRender();
 }
