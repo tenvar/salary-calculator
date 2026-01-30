@@ -741,7 +741,9 @@ function setLanguage(lang) {
     });
 
     updateLabel('label-pensionEnabled', t.labels.pensionEnabled);
+    updateLabel('label-pensionRate', t.labels.pensionRate);
     updateLabel('label-studyFundEnabled', t.labels.studyFundEnabled);
+    updateLabel('label-studyFundRate', t.labels.studyFundRate);
     updateLabel('label-netSalary', t.results.netSalary);
 
     const footerEl = document.getElementById('footer-disclaimer');

@@ -39,13 +39,15 @@ h1 {
     font-size: clamp(1.25rem, 5vw, 2rem);
     text-align: center;
     background: linear-gradient(to right, var(--color-secondary), var(--color-primary));
-    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    padding-right: 4rem; /* space for lang selector */
-    overflow: visible;
+    max-width: calc(100% - 7rem);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
     word-wrap: break-word;
-    max-width: 100%;
 }
 
 p.subtitle {
@@ -208,7 +210,6 @@ p.subtitle {
     min-height: 36px;
     min-width: 40px;
     font-size: 0.9rem;
-    font-weight: 600;
 }
 
 @media (max-width: 480px) {
@@ -222,7 +223,6 @@ p.subtitle {
     h1 {
         padding-right: 3.5rem;
         font-size: 1.25rem;
-        min-width: 0; /* allow flex shrink / prevent overflow */
     }
 }
 
@@ -236,7 +236,6 @@ p.subtitle {
 .lang-btn.active {
     background: var(--color-primary);
     border-color: var(--color-primary);
-    color: #ffffff;
 }
 
 .box {
@@ -290,22 +289,4 @@ p.subtitle {
     max-width: 640px;
     margin: 0 auto;
     line-height: 1.5;
-}
-
-/* Accessibility: sufficient contrast for disclaimer and results */
-.disclaimer {
-    color: var(--color-text-muted) !important;
-}
-
-.results-section .result-row {
-    color: var(--color-text);
-}
-
-.results-section .result-row span:last-child {
-    color: var(--color-text);
-}
-
-.input-group label.visually-associated {
-    font-size: 0.9rem;
-    color: var(--color-text-muted);
 }
