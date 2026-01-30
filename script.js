@@ -121,16 +121,83 @@ const translations = {
 let rates = null;
 let currentLang = 'ru';
 
+const DEFAULT_RATES = {
+  "income_tax": {
+    "brackets": [
+      { "rate": 0.10, "min": 0, "max": 7010 },
+      { "rate": 0.14, "min": 7011, "max": 10060 },
+      { "rate": 0.20, "min": 10061, "max": 16150 },
+      { "rate": 0.31, "min": 16151, "max": 22440 },
+      { "rate": 0.35, "min": 22441, "max": 46690 },
+      { "rate": 0.47, "min": 46691, "max": null }
+    ],
+    "mas_yasef": {
+      "threshold": 58000,
+      "rate": 0.03
+    }
+  },
+  "credit_points": {
+    "value": 242,
+    "base": 2.25,
+    "gender": {
+      "female": 0.5
+    },
+    "children": {
+      "mother": [
+        { "min_age": 0, "max_age": 5, "points": 2.5 },
+        { "min_age": 6, "max_age": 17, "points": 1.0 },
+        { "min_age": 18, "max_age": 18, "points": 0.5 }
+      ],
+      "father": [
+        { "min_age": 0, "max_age": 3, "points": 2.5 }
+      ]
+    },
+    "oleh_hadash": [
+      { "min_month": 1, "max_month": 18, "points": 0.25 },
+      { "min_month": 19, "max_month": 30, "points": 0.166666667 },
+      { "min_month": 31, "max_month": 42, "points": 0.083333333 }
+    ],
+    "army": {
+      "validity_months": 36,
+      "male_long": 2.0,
+      "female_or_short": 1.0
+    },
+    "degree": {
+      "bachelor": 1.0,
+      "master": 0.5
+    }
+  },
+  "bituah_leumi": {
+    "threshold": 7522,
+    "rates": {
+      "low": {
+        "insurance": 0.0040,
+        "health": 0.0310
+      },
+      "high": {
+        "insurance": 0.0395,
+        "health": 0.0500
+      }
+    }
+  },
+  "social": {
+    "pension_rate": 0.06,
+    "study_fund_rate": 0.025,
+    "study_fund_limit": 15712
+  }
+};
+
 async function init() {
     try {
         const response = await fetch('rates.json');
         if (!response.ok) throw new Error('Failed to load rates');
         rates = await response.json();
-        calculate();
     } catch (e) {
-        console.error("Failed to load rates", e);
+        console.warn("Failed to load rates.json (likely CORS), using default rates.", e);
+        rates = DEFAULT_RATES;
     }
 
+    calculate();
     setupEventListeners();
     updateLanguage('ru');
 }
