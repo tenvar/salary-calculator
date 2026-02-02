@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Архитектура CarSage</title>
+  <link rel="icon" href="public/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="public/style.css">
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  </script>
+</head>
+
+<body>
+  <main class="container" style="display: block; max-width: 1400px; padding-top: 2rem;">
+    <h1>Архитектура проекта CarSage</h1>
+    <p class="subtitle">Визуализация структуры, ответственности сервисов и потоков данных</p>
+
+    <!-- Diagram -->
+    <div class="card" style="margin-bottom: 2rem;">
+      <h2>Общая схема</h2>
+      <div class="mermaid" style="text-align: center;">
+graph LR
+    subgraph Clients
+        Web
+        Mobile
+        AdminPanel
+    end
+
+    Web & Mobile --> Back
+    AdminPanel --> AdminBack
+
+    subgraph Services
+        Back
+        AdminBack
+        CarService["Car Service (Mongo)"]
+        Notif[Notification Service]
+        Email[Email Service]
+    end
+
+    Back --> CarService
+    Back --> Notif
+
+    AdminBack --> CarService
+    AdminBack --> Email
+    AdminBack --> Notif
+
+    Notif --> Email
+      </div>
+    </div>
+
+    <!-- Services Grid -->
+    <h2>Микросервисы</h2>
+    <div class="service-grid">
+
+      <!-- 1. Car Service -->
+      <div class="card service-card">
+        <h3>1. Car Service (carsage-car-service)</h3>
+        <p><strong>Статус:</strong> <span style="color: var(--color-accent);">В разработке</span></p>
+        <p><strong>БД:</strong> MongoDB (Cars, CarManufactures, CarModels)</p>
+        <p><strong>Ответственность:</strong> Хранение "Золотой записи" автомобиля. Вся статическая информация о машинах.</p>
+
+        <h4>Эндпоинты (Планируемые)</h4>
+        <ul style="list-style-position: inside; color: var(--color-text-muted);">
+          <li><code>GET /cars/vin/:vin</code> (Инфо по VIN)</li>
+          <li><code>GET /cars/:id</code> (Детали машины)</li>
+          <li><code>POST /cars/batch</code> (Список по ID)</li>
+          <li><code>POST /cars/import</code> (Импорт)</li>
+          <li><code>PUT/DELETE /cars/:id</code></li>
+        </ul>
+      </div>
+
+      <!-- 2. Back -->
+      <div class="card service-card">
+        <h3>2. Back (carsage-back)</h3>
+        <p><strong>Статус:</strong> <span style="color: var(--color-secondary);">Существует</span></p>
+        <p><strong>БД:</strong> PostgreSQL (Users, UserCars, Services)</p>
+        <p><strong>Ответственность:</strong> Пользовательские данные. Гараж (UserId <-> CarId).</p>
+
+        <h4>План миграции</h4>
+        <ul style="list-style-position: inside; color: var(--color-text-muted);">
+          <li><code>/users/cars</code> -> Запрос деталей у Car Service</li>
+          <li><code>/users/cars/add</code> -> Валидация VIN через Car Service</li>
+          <li><code>/vin/info</code> -> DEPRECATE</li>
+          <li><code>/cars/:id</code> -> Proxy to Car Service</li>
+        </ul>
+      </div>
+
+      <!-- 3. Admin Back -->
+      <div class="card service-card">
+        <h3>3. Admin Back (carsage-admin-back)</h3>
+        <p><strong>Статус:</strong> <span style="color: var(--color-secondary);">Существует</span></p>
+        <p><strong>БД:</strong> PostgreSQL (Admins, Logs)</p>
+        <p><strong>Ответственность:</strong> Управление контентом. BFF для админ-панели.</p>
+
+        <h4>План миграции</h4>
+        <ul style="list-style-position: inside; color: var(--color-text-muted);">
+          <li><code>/email/templates</code> -> Proxy to Email Service</li>
+          <li><code>/cars/import</code> -> Вызов Car Service</li>
+          <li><code>/notifications/send</code> -> Вызов Notification Service</li>
+        </ul>
+      </div>
+
+      <!-- 4. Notification Service -->
+      <div class="card service-card">
+        <h3>4. Notification Service</h3>
+        <p><strong>Статус:</strong> <span style="color: var(--color-accent);">В разработке</span></p>
+        <p><strong>БД:</strong> PostgreSQL (Queues, Logs, Settings)</p>
+        <p><strong>Ответственность:</strong> Единое окно отправки (Push/Email). Решает КОГДА и КУДА.</p>
+
+        <h4>Функции</h4>
+        <ul style="list-style-position: inside; color: var(--color-text-muted);">
+          <li>Универсальная отправка <code>/send</code></li>
+          <li>Повторяемые сообщения <code>/recurring</code></li>
+          <li>Вызов Email Service для писем</li>
+        </ul>
+      </div>
+
+      <!-- 5. Email Service -->
+      <div class="card service-card">
+        <h3>5. Email Service (carsage-email-service)</h3>
+        <p><strong>Статус:</strong> <span style="color: var(--color-secondary);">Существует</span></p>
+        <p><strong>БД:</strong> PostgreSQL (Templates)</p>
+        <p><strong>Ответственность:</strong> Рендеринг и отправка писем.</p>
+
+        <h4>Изменения</h4>
+        <ul style="list-style-position: inside; color: var(--color-text-muted);">
+          <li>Закрыть доступ к <code>/email/send</code> для всех кроме Notif Service</li>
+          <li>CRUD шаблонов для Admin Back</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Data Flow -->
+    <h2 style="margin-top: 2rem;">Сводная таблица потоков данных</h2>
+    <div class="card" style="overflow-x: auto;">
+      <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--color-border);">
+            <th style="padding: 0.5rem;">Источник</th>
+            <th style="padding: 0.5rem;">Цель</th>
+            <th style="padding: 0.5rem;">Действие</th>
+            <th style="padding: 0.5rem;">Протокол</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="padding: 0.5rem;">Back</td>
+            <td style="padding: 0.5rem;">Car Service</td>
+            <td style="padding: 0.5rem;">Получение данных о машинах для гаража</td>
+            <td style="padding: 0.5rem;">HTTP/REST</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="padding: 0.5rem;">Back</td>
+            <td style="padding: 0.5rem;">Notification</td>
+            <td style="padding: 0.5rem;">Отправка OTP, Welcome-писем</td>
+            <td style="padding: 0.5rem;">HTTP/REST</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="padding: 0.5rem;">Admin</td>
+            <td style="padding: 0.5rem;">Car Service</td>
+            <td style="padding: 0.5rem;">Импорт, Редактирование машин</td>
+            <td style="padding: 0.5rem;">HTTP/REST</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="padding: 0.5rem;">Admin</td>
+            <td style="padding: 0.5rem;">Email Service</td>
+            <td style="padding: 0.5rem;">Редактирование шаблонов</td>
+            <td style="padding: 0.5rem;">HTTP/REST</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="padding: 0.5rem;">Admin</td>
+            <td style="padding: 0.5rem;">Notification</td>
+            <td style="padding: 0.5rem;">Массовая рассылка</td>
+            <td style="padding: 0.5rem;">HTTP/REST</td>
+          </tr>
+          <tr>
+            <td style="padding: 0.5rem;">Notification</td>
+            <td style="padding: 0.5rem;">Email Service</td>
+            <td style="padding: 0.5rem;">Физическая отправка письма</td>
+            <td style="padding: 0.5rem;">HTTP/REST</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer class="site-footer">
+        <p><a href="index.html" style="color: var(--color-primary); text-decoration: none;">&larr; Вернуться к калькулятору</a></p>
+    </footer>
+
+  </main>
+</body>
+</html>
